@@ -32,9 +32,9 @@
           <td>{{ r.due_date }}</td>
           <td>
             {% if r.days_left == 0 %}
-              <span style="font-weight:700;color:#c92a2a">Today!</span>
+              <span class="due-today">Today!</span>
             {% elif r.days_left == 1 %}
-              <span style="font-weight:700;color:#e67700">1 day</span>
+              <span class="due-tomorrow">1 day</span>
             {% else %}
               {{ r.days_left }} days
             {% endif %}

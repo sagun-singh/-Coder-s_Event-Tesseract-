@@ -2,7 +2,7 @@
 {% block title %}Stock Summary{% endblock %}
 {% block content %}
 
-<div class="flex mb-2" style="justify-content:space-between">
+<div class="report-heading">
   <h2>Stock Summary</h2>
   <a href="{{ url_for('reports.export_csv', kind='stock') }}" class="btn btn-sm btn-outline">
     Export CSV

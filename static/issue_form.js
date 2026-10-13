@@ -22,8 +22,8 @@
     var kind = opt.dataset ? opt.dataset.kind : opt.getAttribute("data-kind");
 
     if (kind === "asset") {
-      qtyRow.style.display   = "none";
-      assetRow.style.display = "";   // un-hide
+      qtyRow.classList.add("js-hidden");
+      assetRow.classList.remove("js-hidden");
       qtyInput.value = "1";
 
       var itemId = opt.value;
@@ -47,8 +47,8 @@
           assetSel.innerHTML = "<option value=\"\">Error loading assets<\/option>";
         });
     } else {
-      qtyRow.style.display   = "";
-      assetRow.style.display = "none";
+      qtyRow.classList.remove("js-hidden");
+      assetRow.classList.add("js-hidden");
       assetSel.value = "";
     }
   });

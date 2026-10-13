@@ -2,7 +2,7 @@
 {% block title %}Issue Detail{% endblock %}
 
 {% block content %}
-<a href="{{ url_for('student.dashboard') }}" class="btn btn-outline btn-sm" style="margin-bottom:.75rem">← Back</a>
+<a href="{{ url_for('student.dashboard') }}" class="btn btn-outline btn-sm detail-back">← Back</a>
 <h2>Issue #{{ issue['issue_id'] }} – {{ issue['item_name'] }}</h2>
 
 <div class="card form-card">
@@ -61,7 +61,7 @@
 {% endif %}
 
 {% if issue['status'] == 'open' %}
-<form method="post" action="{{ url_for('student.renew', issue_id=issue['issue_id']) }}" style="margin-top:.75rem">
+<form method="post" class="renew-form" action="{{ url_for('student.renew', issue_id=issue['issue_id']) }}">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   <button class="btn btn-primary btn-sm">Request Renewal</button>
 </form>

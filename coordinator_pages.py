@@ -22,6 +22,7 @@ from auth import coordinator_required
 from database import get_db, log_action, add_item, add_asset, add_location
 from logic_issue import issue_item
 from logic_return_renewal import return_item, decide_renewal, update_condition
+from qr_slip import issue_slip_qr_data_uri
 from time_utils import get_today
 
 coordinator_bp = Blueprint("coordinator", __name__, url_prefix="/coordinator")
@@ -375,6 +376,9 @@ def issue_slip(issue_id):
         "coordinator/issue_slip.html",
         issue=issue,
         student=student,
+        qr_data_uri=issue_slip_qr_data_uri(
+            url_for("coordinator.issue_slip", issue_id=issue_id, _external=True)
+        ),
     )
 
 

@@ -13,7 +13,7 @@
   sel.addEventListener("change", function () {
     var opt  = this.options[this.selectedIndex];
     var kind = opt.dataset ? opt.dataset.kind : opt.getAttribute("data-kind");
-    assetRow.style.display = (kind === "asset")    ? "" : "none";
-    qtyRow.style.display   = (kind === "quantity") ? "" : "none";
+    assetRow.classList.toggle("js-hidden", kind !== "asset");
+    qtyRow.classList.toggle("js-hidden", kind !== "quantity");
   });
 }());

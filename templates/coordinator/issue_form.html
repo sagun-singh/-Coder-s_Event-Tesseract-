@@ -1,9 +1,16 @@
 {% extends "base.html" %}
 {% block title %}Issue Item{% endblock %}
 {% block content %}
-<h2>Issue Item to Student</h2>
+<header class="page-heading">
+  <div>
+    <span class="page-eyebrow">Circulation desk</span>
+    <h2>Issue an item</h2>
+    <p class="page-subtitle">Select a student and inventory item to record a new loan.</p>
+  </div>
+  <div class="today-chip"><span>Issue date</span><strong>{{ today }}</strong></div>
+</header>
 
-<div class="card form-card">
+<div class="card form-card issue-form-card">
   <form method="post" action="{{ url_for('coordinator.issue') }}" novalidate id="issue-form">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
@@ -35,7 +42,7 @@
     {# Qty row (quantity items only) #}
     <div class="form-group" id="qty-row">
       <label for="qty">Quantity <span class="req">*</span></label>
-      <input type="number" id="qty" name="qty" min="1" value="1" style="max-width:120px">
+      <input type="number" id="qty" name="qty" min="1" value="1" class="qty-input">
     </div>
 
     {# Asset select (asset items only, populated via inline fetch) #}
@@ -62,15 +69,5 @@
 {% endblock %}
 
 {% block scripts %}
-{#
-  Self-hosted JS (inline forbidden by CSP).
-  This script lives in <script> tags because the base template's
-  after_request sets CSP 'default-src self'; inline JS would be blocked.
-  We keep logic trivial and inline-free by embedding it in the
-  {% block scripts %} which is inside the page, not a separate file.
-  However, CSP blocks ALL inline <script> tags. So we must serve JS from
-  /static.  The asset-switcher below is therefore in static/issue_form.js,
-  and we load it here.
-#}
 <script src="{{ url_for('static', filename='issue_form.js') }}"></script>
 {% endblock %}

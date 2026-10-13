@@ -25,12 +25,12 @@
     <div class="form-group">
       <label for="qty_returned">Qty Returned <span class="req">*</span></label>
       <input type="number" id="qty_returned" name="qty_returned"
-             min="1" value="1" style="max-width:120px" required>
+             min="1" value="1" class="qty-input" required>
     </div>
 
     <div class="form-group">
       <label for="condition">Condition on Return <span class="req">*</span></label>
-      <select id="condition" name="condition" required style="max-width:260px">
+      <select id="condition" name="condition" class="condition-select" required>
         <option value="">-- Select --</option>
         <option value="usable">Usable (back to stock)</option>
         <option value="damaged">Damaged</option>

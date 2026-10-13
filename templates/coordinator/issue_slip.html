@@ -4,7 +4,7 @@
 
 {# Print button – hidden when printing #}
 <div class="no-print flex mb-2">
-  <button class="btn btn-print" onclick="window.print()">Print Slip</button>
+  <button class="btn btn-print" type="button" id="print-slip">Print Slip</button>
   <a href="{{ url_for('coordinator.dashboard') }}" class="btn btn-outline">Back to Dashboard</a>
 </div>
 
@@ -16,7 +16,7 @@
     <p>National Forensic Sciences University &bull; Sector 9, Gandhinagar</p>
   </div>
 
-  <table class="slip-table" style="width:100%">
+  <table class="slip-table">
     <tr>
       <td>Slip No.</td>
       <td><strong>#{{ issue.issue_id }}</strong></td>
@@ -64,6 +64,10 @@
       <td>Issued By</td>
       <td>{{ issue.issued_by }}</td>
     </tr>
+    <tr>
+      <td>Scan to view slip</td>
+      <td><img class="slip-qr" src="{{ qr_data_uri }}" alt="QR code linking to issue slip #{{ issue.issue_id }}"></td>
+    </tr>
   </table>
 
   <div class="slip-footer">
@@ -78,4 +82,7 @@
   </div>
 </div>
 </div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='issue_slip.js') }}"></script>
 {% endblock %}

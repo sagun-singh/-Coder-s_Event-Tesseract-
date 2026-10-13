@@ -22,10 +22,10 @@
   &nbsp;
   <a href="{{ url_for('time_machine') }}">Change</a>
   &nbsp;&bull;&nbsp;
-  <form method="post" action="{{ url_for('time_machine') }}" style="display:inline">
+  <form method="post" action="{{ url_for('time_machine') }}" class="inline-form">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <input type="hidden" name="fake_date" value="">
-    <button type="submit" style="background:none;border:none;cursor:pointer;color:#e67700;font-weight:700;font-size:.85rem;">
+    <button type="submit" class="tm-reset-btn">
       Reset
     </button>
   </form>
@@ -35,13 +35,13 @@
 
 {# ── Top nav ──────────────────────────────────────────────────────────── #}
 <nav class="topnav">
-  <span class="brand">NFSU Lab Inventory</span>
+  <a class="brand" href="{{ url_for('index') }}">NFSU Lab Inventory</a>
 
   {% if g.user %}
     {% if g.user['role'] == 'coordinator' %}
-      <a href="{{ url_for('coordinator.dashboard') }}">Dashboard</a>
-      <a href="{{ url_for('coordinator.issue') }}">Issue</a>
-      <a href="{{ url_for('coordinator.record_return') }}">Return</a>
+      <a href="{{ url_for('coordinator.dashboard') }}" {% if request.endpoint == 'coordinator.dashboard' %}aria-current="page"{% endif %}>Dashboard</a>
+      <a href="{{ url_for('coordinator.issue') }}" {% if request.endpoint == 'coordinator.issue' %}aria-current="page"{% endif %}>Issue</a>
+      <a href="{{ url_for('coordinator.record_return') }}" {% if request.endpoint == 'coordinator.record_return' %}aria-current="page"{% endif %}>Return</a>
 
       <span class="dropdown">
         <a class="dropdown-toggle" tabindex="0">Add &or;</a>
@@ -68,18 +68,18 @@
         </div>
       </span>
 
-      <a href="{{ url_for('coordinator.condition') }}">Status</a>
-      <a href="{{ url_for('time_machine') }}">Time Machine</a>
+      <a href="{{ url_for('coordinator.condition') }}" {% if request.endpoint == 'coordinator.condition' %}aria-current="page"{% endif %}>Status</a>
+      <a href="{{ url_for('time_machine') }}" {% if request.endpoint == 'time_machine' %}aria-current="page"{% endif %}>Time Machine</a>
     {% else %}
-      <a href="{{ url_for('student.dashboard') }}">My Items</a>
-      <a href="{{ url_for('student.history') }}">History</a>
-      <a href="{{ url_for('student.profile') }}">Profile</a>
+      <a href="{{ url_for('student.dashboard') }}" {% if request.endpoint == 'student.dashboard' %}aria-current="page"{% endif %}>My Items</a>
+      <a href="{{ url_for('student.history') }}" {% if request.endpoint == 'student.history' %}aria-current="page"{% endif %}>History</a>
+      <a href="{{ url_for('student.profile') }}" {% if request.endpoint == 'student.profile' %}aria-current="page"{% endif %}>Profile</a>
     {% endif %}
 
     <span class="nav-user">{{ g.user['username'] }}</span>
     <form method="post" action="{{ url_for('auth.logout') }}">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-      <button type="submit" class="btn btn-sm btn-outline">Logout</button>
+      <button type="submit" class="btn btn-sm btn-outline logout-btn">Logout</button>
     </form>
   {% endif %}
 </nav>

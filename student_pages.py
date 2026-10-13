@@ -17,6 +17,7 @@ from flask import (
 
 from auth import student_required
 from database import get_db
+from karma import karma_score
 from logic_return_renewal import request_renewal
 from time_utils import get_today
 
@@ -42,6 +43,7 @@ def dashboard():
     db = get_db()
     sid = _my_student_id()
     today = get_today()
+    score, badge, message = karma_score(sid, today)
 
     # Open issues for this student only
     open_issues = db.execute(
@@ -74,6 +76,9 @@ def dashboard():
         open_issues=open_issues,
         pending_renewals=pending_renewals,
         today=today,
+        karma_score=score,
+        karma_badge=badge,
+        karma_message=message,
     )
 
 

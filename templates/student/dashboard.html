@@ -2,13 +2,52 @@
 {% block title %}My Dashboard{% endblock %}
 
 {% block content %}
-<div class="flex mb-2" style="justify-content:space-between;align-items:flex-start">
-  <h2>My Borrowed Items</h2>
-  <span class="text-muted" style="font-size:.85rem">Today: <strong>{{ today }}</strong></span>
-</div>
+{% set counts = namespace(overdue=0) %}
+{% for issue in open_issues %}
+  {% if issue['due_date'] < today %}{% set counts.overdue = counts.overdue + 1 %}{% endif %}
+{% endfor %}
+
+<header class="dashboard-hero student-hero">
+  <div class="dashboard-hero-copy">
+    <span class="page-eyebrow">Student portal</span>
+    <h1>Your lab inventory</h1>
+    <p>Keep track of borrowed equipment, due dates, and renewal requests in one place.</p>
+  </div>
+  <div class="hero-date"><span>Today</span><strong>{{ today }}</strong></div>
+</header>
+
+<section class="summary-grid" aria-label="Loan summary">
+  <article class="summary-card">
+    <span class="summary-icon summary-icon-blue" aria-hidden="true">↗</span>
+    <div><span class="summary-label">Active loans</span><strong>{{ open_issues|length }}</strong></div>
+  </article>
+  <article class="summary-card">
+    <span class="summary-icon summary-icon-red" aria-hidden="true">!</span>
+    <div><span class="summary-label">Past due</span><strong>{{ counts.overdue }}</strong></div>
+  </article>
+  <article class="summary-card">
+    <span class="summary-icon summary-icon-gold" aria-hidden="true">↻</span>
+    <div><span class="summary-label">Renewal requests</span><strong>{{ pending_renewals|length }}</strong></div>
+  </article>
+  <article class="summary-card karma-summary">
+    <span class="summary-icon summary-icon-{{ karma_badge|lower|replace(' ', '-') }}" aria-hidden="true">★</span>
+    <div class="karma-copy">
+      <span class="summary-label">Karma points</span>
+      <strong>{{ karma_score }} <span class="badge badge-{{ 'needs-reminder' if karma_badge == 'Needs a Reminder' else karma_badge }}">{{ karma_badge }}</span></strong>
+      <small>{{ karma_message }}</small>
+    </div>
+  </article>
+</section>
 
 {% if open_issues %}
-<div class="card">
+<section class="card dashboard-section">
+  <div class="section-heading">
+    <div>
+      <span class="page-eyebrow">Equipment</span>
+      <h2>Items currently with you</h2>
+    </div>
+    <span class="count-pill">{{ open_issues|length }} active</span>
+  </div>
   <div class="tbl-wrap">
     <table>
       <thead>
@@ -34,7 +73,7 @@
           <td>{{ i['issue_date'] }}</td>
           <td>
             {{ i['due_date'] }}
-            {% if overdue %}<span class="badge badge-overdue" style="margin-left:.4rem">OVERDUE</span>{% endif %}
+            {% if overdue %}<span class="badge badge-overdue overdue-badge">OVERDUE</span>{% endif %}
           </td>
           <td><span class="badge badge-open">open</span></td>
           <td>
@@ -51,14 +90,26 @@
       </tbody>
     </table>
   </div>
-</div>
+</section>
 {% else %}
-<div class="alert alert-info">You have no items currently borrowed.</div>
+<section class="empty-state">
+  <span class="empty-state-icon" aria-hidden="true">✓</span>
+  <span class="page-eyebrow">All clear</span>
+  <h2>No borrowed items</h2>
+  <p>You don’t have any lab equipment checked out right now. Your future loans will appear here.</p>
+  <a class="btn btn-outline" href="{{ url_for('student.history') }}">View loan history</a>
+</section>
 {% endif %}
 
 {% if pending_renewals %}
-<h3 class="mt-2">Pending Renewal Requests</h3>
-<div class="card">
+<section class="card dashboard-section">
+  <div class="section-heading">
+    <div>
+      <span class="page-eyebrow">Awaiting review</span>
+      <h2>Pending renewal requests</h2>
+    </div>
+    <span class="count-pill">{{ pending_renewals|length }} pending</span>
+  </div>
   <div class="tbl-wrap">
     <table>
       <thead>
@@ -75,6 +126,6 @@
       </tbody>
     </table>
   </div>
-</div>
+</section>
 {% endif %}
 {% endblock %}
