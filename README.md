@@ -32,11 +32,8 @@ An automated inventory management and item issuing web application designed to m
 | Technology | Purpose |
 |---|---|
 | Python | Application logic and backend processing |
-| Flask | Web application framework |
 | SQLite3 | Database management |
 | HTML5 | Web page structure |
-| Jinja2 | Dynamic HTML templates |
-| CSS | User interface styling |
 
 ## 📂 Project Structure
 
@@ -60,80 +57,6 @@ An automated inventory management and item issuing web application designed to m
 ```
 
 *Note: The structure above describes the expected project files. Actual filenames and available features may vary as development progresses.*
-
-## ⚙️ Installation and Setup
-
-### Prerequisites
-
-Install the following before running the application:
-
-- Python 3
-- Git
-- A code editor, such as Visual Studio Code
-
-### Step 1: Clone the Repository
-
-Open a terminal and run:
-
-```bash
-git clone <YOUR_GITHUB_REPOSITORY_URL>
-```
-
-Replace `<YOUR_GITHUB_REPOSITORY_URL>` with your team's repository URL.
-
-Navigate into the project directory:
-
-```bash
-cd <YOUR_PROJECT_FOLDER>
-```
-
-### Step 2: Create a Virtual Environment
-
-Create a virtual environment:
-
-```bash
-python -m venv .venv
-```
-
-Activate it on Windows PowerShell:
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-
-If activation is blocked by your system's execution policy, follow your organization's approved Python environment setup instructions.
-
-### Step 3: Install Dependencies
-
-Install Flask:
-
-```bash
-python -m pip install Flask
-```
-
-If the project includes a `requirements.txt` file, install all listed dependencies instead:
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-### Step 4: Initialize the Database
-
-Review `database.py` to identify how the database is initialized.
-
-If the file includes a safe initialization entry point, run the documented command to create the database and its tables. Check the file before executing it because it may also insert demonstration data.
-
-### Step 5: Run the Application
-
-Run the application's actual entry-point file. If the main application is `app.py`, use:
-
-```bash
-python app.py
-```
-
-Open the local URL displayed in the terminal to access the application.
-
-If your team uses a different entry point, follow the instructions provided by the project maintainers.
 
 ## 🔐 Security Considerations
 
@@ -173,7 +96,3 @@ Potential improvements include:
 - More detailed inventory analytics.
 - Additional automated tests.
 - Improved accessibility and responsive design.
-
-## 📄 License
-
-Add the license selected by your team here before distributing the project publicly.
