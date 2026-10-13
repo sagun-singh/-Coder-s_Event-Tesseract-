@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Audit Log{% endblock %}
+
+{% block content %}
+<h2>Stock / Audit Log <small style="font-size:.8rem;font-weight:400;color:#666">(last 500 entries)</small></h2>
+<div class="card">
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Date</th><th>Item</th><th>Action</th><th>Qty</th><th>Reason</th><th>Done By</th></tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr>
+          <td class="text-muted">{{ r['log_id'] }}</td>
+          <td>{{ r['log_date'] }}</td>
+          <td>{{ r['item_name'] }} <code class="text-muted">({{ r['code'] }})</code></td>
+          <td><span class="badge badge-closed">{{ r['action'] }}</span></td>
+          <td>{{ r['qty'] }}</td>
+          <td class="text-muted" style="font-size:.8rem">{{ r['reason'] }}</td>
+          <td>{{ r['done_by'] }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="no-items">No log entries.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

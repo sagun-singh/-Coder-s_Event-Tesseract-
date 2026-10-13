@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Record Return{% endblock %}
+{% block content %}
+<h2>Record Return</h2>
+
+<div class="card form-card">
+  <form method="post" action="{{ url_for('coordinator.record_return') }}" novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="form-group">
+      <label for="issue_id">Open Issue <span class="req">*</span></label>
+      <select id="issue_id" name="issue_id" required>
+        <option value="">-- Select issue --</option>
+        {% for i in open_issues %}
+        <option value="{{ i['issue_id'] }}">
+          #{{ i['issue_id'] }} | {{ i['student_name'] }} ({{ i['enrolment_no'] }})
+          | {{ i['item_name'] }}
+          | due {{ i['due_date'] }}
+          | outstanding: {{ i['qty'] - i['qty_returned'] }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="qty_returned">Qty Returned <span class="req">*</span></label>
+      <input type="number" id="qty_returned" name="qty_returned"
+             min="1" value="1" style="max-width:120px" required>
+    </div>
+
+    <div class="form-group">
+      <label for="condition">Condition on Return <span class="req">*</span></label>
+      <select id="condition" name="condition" required style="max-width:260px">
+        <option value="">-- Select --</option>
+        <option value="usable">Usable (back to stock)</option>
+        <option value="damaged">Damaged</option>
+        <option value="lost">Lost</option>
+        <option value="maintenance">Needs Maintenance</option>
+      </select>
+    </div>
+
+    <div class="flex">
+      <button type="submit" class="btn btn-success">Record Return</button>
+      <a href="{{ url_for('coordinator.dashboard') }}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

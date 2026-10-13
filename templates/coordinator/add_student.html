@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Add Student{% endblock %}
+{% block content %}
+<h2>Add Student &amp; Login</h2>
+
+<div class="card form-card">
+  <form method="post" action="{{ url_for('coordinator.add_student') }}" novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="form-group">
+      <label>Full Name <span class="req">*</span></label>
+      <input type="text" name="name" maxlength="200" required autofocus>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Enrolment No <span class="req">*</span></label>
+        <input type="text" name="enrolment_no" maxlength="50" required>
+      </div>
+      <div class="form-group">
+        <label>Semester (1&ndash;12) <span class="req">*</span></label>
+        <input type="number" name="semester" min="1" max="12" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Programme <span class="req">*</span></label>
+      <input type="text" name="programme" maxlength="100" required placeholder="e.g. M.Sc. DFIS">
+    </div>
+
+    <div class="form-group">
+      <label>Contact <span class="req">*</span></label>
+      <input type="text" name="contact" maxlength="100" required placeholder="Phone / email">
+    </div>
+
+    <hr style="margin:1rem 0">
+    <p style="font-size:.85rem;color:#555;margin-bottom:.75rem">Login credentials for this student:</p>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Username <span class="req">*</span></label>
+        <input type="text" name="username" maxlength="150" autocomplete="off" required>
+      </div>
+      <div class="form-group">
+        <label>Password (min 8 chars) <span class="req">*</span></label>
+        <input type="password" name="password" minlength="8" autocomplete="new-password" required>
+      </div>
+    </div>
+
+    <div class="flex">
+      <button type="submit" class="btn btn-primary">Create Student</button>
+      <a href="{{ url_for('coordinator.students') }}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

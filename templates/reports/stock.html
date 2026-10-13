@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Stock Summary{% endblock %}
+{% block content %}
+
+<div class="flex mb-2" style="justify-content:space-between">
+  <h2>Stock Summary</h2>
+  <a href="{{ url_for('reports.export_csv', kind='stock') }}" class="btn btn-sm btn-outline">
+    Export CSV
+  </a>
+</div>
+
+<div class="card">
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Kind</th>
+          <th>Total</th>
+          <th>Available</th>
+          <th>Issued</th>
+          <th>Overdue</th>
+          <th>Damaged</th>
+          <th>Lost</th>
+          <th>Maint.</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr>
+          <td><code>{{ r.code }}</code></td>
+          <td>{{ r.name }}</td>
+          <td>{{ r.category }}</td>
+          <td>
+            <span class="badge {% if r.kind == 'asset' %}badge-open{% else %}badge-closed{% endif %}">
+              {{ r.kind }}
+            </span>
+          </td>
+          <td>{{ r.total }}</td>
+          <td>
+            <span class="badge {% if r.available > 0 %}badge-open{% else %}badge-overdue{% endif %}">
+              {{ r.available }}
+            </span>
+          </td>
+          <td>{{ r.issued }}</td>
+          <td>
+            {% if r.overdue > 0 %}
+            <span class="badge badge-overdue">{{ r.overdue }}</span>
+            {% else %}
+            0
+            {% endif %}
+          </td>
+          <td>{{ r.damaged }}</td>
+          <td>{{ r.lost }}</td>
+          <td>{{ r.maintenance }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="11" class="no-items">No items found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

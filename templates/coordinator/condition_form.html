@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Update Status / Condition{% endblock %}
+{% block content %}
+<h2>Update Item / Asset Status</h2>
+
+<div class="card form-card">
+  <form method="post" action="{{ url_for('coordinator.condition') }}" novalidate id="condition-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="form-group">
+      <label>Item <span class="req">*</span></label>
+      <select id="item_id" name="item_id" required>
+        <option value="">-- Select item --</option>
+        {% for it in items %}
+        <option value="{{ it['item_id'] }}" data-kind="{{ it['kind'] }}">
+          {{ it['name'] }} [{{ it['code'] }}] &mdash; {{ it['kind'] }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    {# Asset ID field – only for asset-kind items #}
+    <div class="form-group js-hidden" id="asset-id-row">
+      <label>Asset ID <span class="req">*</span></label>
+      <input type="number" name="asset_id" id="asset_id" min="1" placeholder="Asset ID from the assets table">
+      <div class="form-text">Required for asset-kind items.</div>
+    </div>
+
+    {# Qty – only for quantity-kind items #}
+    <div class="form-group js-hidden" id="cond-qty-row">
+      <label>Qty to Update <span class="req">*</span></label>
+      <input type="number" name="qty" id="cond_qty" min="1" value="1">
+    </div>
+
+    <div class="form-group">
+      <label>New Condition <span class="req">*</span></label>
+      <select name="new_condition" required style="max-width:260px">
+        <option value="">-- Select --</option>
+        <option value="usable">Usable (restore to stock)</option>
+        <option value="damaged">Damaged</option>
+        <option value="lost">Lost</option>
+        <option value="maintenance">Maintenance</option>
+      </select>
+    </div>
+
+    <div class="flex">
+      <button type="submit" class="btn btn-warning">Update Status</button>
+      <a href="{{ url_for('coordinator.items') }}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='condition_form.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Items{% endblock %}
+
+{% block content %}
+<div class="flex mb-2" style="justify-content:space-between">
+  <h2>Item Catalogue</h2>
+</div>
+<div class="card">
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th><th>Name</th><th>Category</th><th>Kind</th>
+          <th>Total</th><th>Available</th><th>Damaged</th><th>Lost</th><th>Maint.</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for it in items %}
+        <tr>
+          <td><code>{{ it['code'] }}</code></td>
+          <td>{{ it['name'] }}</td>
+          <td>{{ it['category'] }}</td>
+          <td>
+            <span class="badge {% if it['kind'] == 'asset' %}badge-open{% else %}badge-closed{% endif %}">
+              {{ it['kind'] }}
+            </span>
+          </td>
+          <td>{{ it['total_qty'] }}</td>
+          <td>
+            <span class="badge {% if it['qty_available'] > 0 %}badge-open{% else %}badge-overdue{% endif %}">
+              {{ it['qty_available'] }}
+            </span>
+          </td>
+          <td>{{ it['qty_damaged'] }}</td>
+          <td>{{ it['qty_lost'] }}</td>
+          <td>{{ it['qty_maintenance'] }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="9" class="no-items">No items found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

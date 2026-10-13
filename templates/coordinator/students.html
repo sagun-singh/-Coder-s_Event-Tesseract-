@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Students{% endblock %}
+
+{% block content %}
+<div class="flex mb-2" style="justify-content:space-between">
+  <h2>Students</h2>
+  <a href="{{ url_for('coordinator.add_student') }}" class="btn btn-primary btn-sm">+ Add Student</a>
+</div>
+<div class="card">
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Name</th><th>Enrolment No</th><th>Programme</th><th>Sem</th><th>Contact</th><th>Karma</th></tr>
+      </thead>
+      <tbody>
+        {% for row in students %}
+        <tr>
+          <td>{{ row['student']['name'] }}</td>
+          <td>{{ row['student']['enrolment_no'] }}</td>
+          <td>{{ row['student']['programme'] }}</td>
+          <td>{{ row['student']['semester'] }}</td>
+          <td>{{ row['student']['contact'] }}</td>
+          <td>
+            <span class="badge badge-{{ row['badge'] }}">
+              {{ row['badge'] }} ({{ row['score'] }})
+            </span>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="no-items">No students registered.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

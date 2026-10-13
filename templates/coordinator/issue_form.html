@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Issue Item{% endblock %}
+{% block content %}
+<h2>Issue Item to Student</h2>
+
+<div class="card form-card">
+  <form method="post" action="{{ url_for('coordinator.issue') }}" novalidate id="issue-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="form-group">
+      <label for="student_id">Student <span class="req">*</span></label>
+      <select id="student_id" name="student_id" required>
+        <option value="">-- Select student --</option>
+        {% for s in students %}
+        <option value="{{ s['student_id'] }}">{{ s['name'] }} &mdash; {{ s['enrolment_no'] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="item_id">Item <span class="req">*</span></label>
+      <select id="item_id" name="item_id" required>
+        <option value="">-- Select item --</option>
+        {% for it in items %}
+        <option value="{{ it['item_id'] }}"
+                data-kind="{{ it['kind'] }}"
+                data-available="{{ it['qty_available'] }}">
+          {{ it['name'] }} [{{ it['code'] }}] &mdash; {{ it['kind'] }}
+          ({{ it['qty_available'] }} avail.)
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    {# Qty row (quantity items only) #}
+    <div class="form-group" id="qty-row">
+      <label for="qty">Quantity <span class="req">*</span></label>
+      <input type="number" id="qty" name="qty" min="1" value="1" style="max-width:120px">
+    </div>
+
+    {# Asset select (asset items only, populated via inline fetch) #}
+    <div class="form-group js-hidden" id="asset-row">
+      <label for="asset_id">Asset / Serial No <span class="req">*</span></label>
+      <select id="asset_id" name="asset_id">
+        <option value="">-- Select asset --</option>
+      </select>
+      <div class="form-text">Only available, usable assets are listed.</div>
+    </div>
+
+    <div class="form-group">
+      <label for="purpose">Purpose <span class="req">*</span></label>
+      <input type="text" id="purpose" name="purpose" maxlength="255"
+             placeholder="Brief description / experiment name" required>
+    </div>
+
+    <div class="flex">
+      <button type="submit" class="btn btn-primary">Issue &amp; Print Slip</button>
+      <a href="{{ url_for('coordinator.dashboard') }}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{#
+  Self-hosted JS (inline forbidden by CSP).
+  This script lives in <script> tags because the base template's
+  after_request sets CSP 'default-src self'; inline JS would be blocked.
+  We keep logic trivial and inline-free by embedding it in the
+  {% block scripts %} which is inside the page, not a separate file.
+  However, CSP blocks ALL inline <script> tags. So we must serve JS from
+  /static.  The asset-switcher below is therefore in static/issue_form.js,
+  and we load it here.
+#}
+<script src="{{ url_for('static', filename='issue_form.js') }}"></script>
+{% endblock %}

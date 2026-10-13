@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Time Machine{% endblock %}
+{% block content %}
+<h2>Time Machine</h2>
+<p class="text-muted mb-2" style="font-size:.88rem">
+  Override today&rsquo;s date for testing due-dates and overdue logic.
+  Dates must be real calendar dates between 2020 and 2100.
+  Leave blank and submit to reset to the real system date.
+</p>
+
+<div class="card form-card">
+  <form method="post" action="{{ url_for('time_machine') }}" novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="form-group">
+      <label for="fake_date">Pretend today is&hellip; (YYYY-MM-DD)</label>
+      <input type="date" id="fake_date" name="fake_date"
+             min="2020-01-01" max="2100-12-31"
+             value="{{ session.get('fake_date', '') }}">
+      <div class="form-text">Leave empty and submit to reset to the real date.</div>
+    </div>
+
+    <div class="flex">
+      <button type="submit" class="btn btn-warning">Set Date</button>
+      {% if session.get('fake_date') %}
+      <button type="submit" name="fake_date" value="" class="btn btn-outline">Reset to Real Date</button>
+      {% endif %}
+      <a href="{{ url_for('coordinator.dashboard') }}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{% if session.get('fake_date') %}
+<div class="alert alert-warning mt-2">
+  Time Machine is active &mdash; system date is <strong>{{ session['fake_date'] }}</strong>.
+</div>
+{% endif %}
+{% endblock %}

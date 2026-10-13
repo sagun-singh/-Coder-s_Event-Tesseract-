@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Issue Detail{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('student.dashboard') }}" class="btn btn-outline btn-sm" style="margin-bottom:.75rem">← Back</a>
+<h2>Issue #{{ issue['issue_id'] }} – {{ issue['item_name'] }}</h2>
+
+<div class="card form-card">
+  <table>
+    <tr><th>Item Kind</th><td>{{ issue['kind'] }}</td></tr>
+    {% if issue['kind'] == 'asset' %}
+    <tr><th>Serial No</th><td>{{ issue['serial_no'] }}</td></tr>
+    <tr><th>Asset Condition</th><td>{{ issue['asset_condition'] }}</td></tr>
+    {% else %}
+    <tr><th>Qty Issued</th><td>{{ issue['qty'] }}</td></tr>
+    <tr><th>Qty Returned</th><td>{{ issue['qty_returned'] }}</td></tr>
+    {% endif %}
+    <tr><th>Purpose</th><td>{{ issue['purpose'] }}</td></tr>
+    <tr><th>Issue Date</th><td>{{ issue['issue_date'] }}</td></tr>
+    <tr><th>Due Date</th><td>{{ issue['due_date'] }}</td></tr>
+    <tr><th>Status</th>
+      <td>
+        <span class="badge {% if issue['status'] == 'open' %}badge-open{% else %}badge-closed{% endif %}">
+          {{ issue['status'] }}
+        </span>
+      </td>
+    </tr>
+  </table>
+</div>
+
+{# Renewals history #}
+{% if renewals %}
+<h3 class="mt-2">Renewal Requests</h3>
+<div class="card">
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Requested</th><th>Status</th><th>Revised Due</th><th>Decided By</th><th>Remarks</th></tr>
+      </thead>
+      <tbody>
+        {% for r in renewals %}
+        <tr>
+          <td>{{ r['request_date'] }}</td>
+          <td>
+            <span class="badge
+              {% if r['status'] == 'approved' %}badge-approved
+              {% elif r['status'] == 'rejected' %}badge-rejected
+              {% else %}badge-pending{% endif %}">
+              {{ r['status'] }}
+            </span>
+          </td>
+          <td>{{ r['revised_due_date'] or '—' }}</td>
+          <td>{{ r['decided_by'] or '—' }}</td>
+          <td>{{ r['remarks'] or '—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{% if issue['status'] == 'open' %}
+<form method="post" action="{{ url_for('student.renew', issue_id=issue['issue_id']) }}" style="margin-top:.75rem">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <button class="btn btn-primary btn-sm">Request Renewal</button>
+</form>
+{% endif %}
+{% endblock %}

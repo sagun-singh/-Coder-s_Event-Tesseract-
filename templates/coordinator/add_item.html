@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Add Item{% endblock %}
+{% block content %}
+<h2>Add Item</h2>
+
+<div class="card form-card">
+  <form method="post" action="{{ url_for('coordinator.add_item_route') }}" novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Code <span class="req">*</span></label>
+        <input type="text" name="code" maxlength="50" required placeholder="e.g. OSC-001">
+      </div>
+      <div class="form-group">
+        <label>Category <span class="req">*</span></label>
+        <input type="text" name="category" maxlength="100" required placeholder="e.g. Electronics">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Name <span class="req">*</span></label>
+      <input type="text" name="name" maxlength="200" required placeholder="Full item name">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Kind <span class="req">*</span></label>
+        <select name="kind" required>
+          <option value="">-- Select --</option>
+          <option value="asset">Asset (tracked individually)</option>
+          <option value="quantity">Quantity (counted stock)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Total Qty <span class="req">*</span></label>
+        <input type="number" name="total_qty" min="0" value="1" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Location</label>
+      <select name="location_id">
+        <option value="">-- None --</option>
+        {% for loc in locations %}
+        <option value="{{ loc['location_id'] }}">{{ loc['name'] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <input type="text" name="description" maxlength="500" placeholder="Optional">
+    </div>
+
+    <div class="form-group">
+      <label>Make / Model</label>
+      <input type="text" name="make_model" maxlength="200" placeholder="Optional">
+    </div>
+
+    <div class="flex">
+      <button type="submit" class="btn btn-primary">Add Item</button>
+      <a href="{{ url_for('coordinator.items') }}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

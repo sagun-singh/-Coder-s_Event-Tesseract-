@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Report by Student{% endblock %}
+{% block content %}
+
+<div class="flex mb-2" style="justify-content:space-between">
+  <h2>Issues by Student</h2>
+  <a href="{{ url_for('reports.export_csv', kind='by-student') }}" class="btn btn-sm btn-outline">
+    Export CSV
+  </a>
+</div>
+
+<div class="card">
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Enrolment No</th>
+          <th>Programme / Sem</th>
+          <th>Total Issues</th>
+          <th>Open</th>
+          <th>Overdue</th>
+          <th>Closed</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr {% if r.overdue_issues > 0 %}class="row-overdue"{% endif %}>
+          <td>{{ r.student_name }}</td>
+          <td>{{ r.enrolment_no }}</td>
+          <td>{{ r.programme }}, Sem {{ r.semester }}</td>
+          <td>{{ r.total_issues }}</td>
+          <td>{{ r.open_issues }}</td>
+          <td>
+            {% if r.overdue_issues > 0 %}
+            <span class="badge badge-overdue">{{ r.overdue_issues }}</span>
+            {% else %}
+            0
+            {% endif %}
+          </td>
+          <td>{{ r.closed_issues }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="no-items">No students found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Report by Item{% endblock %}
+{% block content %}
+
+<div class="flex mb-2" style="justify-content:space-between">
+  <h2>Issues by Item</h2>
+  <a href="{{ url_for('reports.export_csv', kind='by-item') }}" class="btn btn-sm btn-outline">
+    Export CSV
+  </a>
+</div>
+
+<div class="card">
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Kind</th>
+          <th>Total Qty</th>
+          <th>Available</th>
+          <th>Total Issues</th>
+          <th>Open</th>
+          <th>Overdue</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr {% if r.overdue_issues > 0 %}class="row-overdue"{% endif %}>
+          <td><code>{{ r.code }}</code></td>
+          <td>{{ r.item_name }}</td>
+          <td>{{ r.category }}</td>
+          <td>{{ r.kind }}</td>
+          <td>{{ r.total_qty }}</td>
+          <td>{{ r.qty_available }}</td>
+          <td>{{ r.total_issues }}</td>
+          <td>{{ r.open_issues }}</td>
+          <td>
+            {% if r.overdue_issues > 0 %}
+            <span class="badge badge-overdue">{{ r.overdue_issues }}</span>
+            {% else %}
+            0
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="9" class="no-items">No items found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

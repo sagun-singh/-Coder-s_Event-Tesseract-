@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard{% endblock %}
+
+{% block content %}
+<div class="flex mb-2" style="justify-content:space-between;align-items:flex-start">
+  <h2>My Borrowed Items</h2>
+  <span class="text-muted" style="font-size:.85rem">Today: <strong>{{ today }}</strong></span>
+</div>
+
+{% if open_issues %}
+<div class="card">
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th><th>Kind</th><th>Serial / Qty</th>
+          <th>Issued</th><th>Due</th><th>Status</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in open_issues %}
+        {% set overdue = i['due_date'] < today %}
+        <tr class="{{ 'row-overdue' if overdue else '' }}">
+          <td><a href="{{ url_for('student.issue_detail', issue_id=i['issue_id']) }}">
+            {{ i['item_name'] }}</a></td>
+          <td>{{ i['kind'] }}</td>
+          <td>
+            {% if i['kind'] == 'asset' %}
+              {{ i['serial_no'] }}
+            {% else %}
+              {{ i['qty'] - i['qty_returned'] }} outstanding
+            {% endif %}
+          </td>
+          <td>{{ i['issue_date'] }}</td>
+          <td>
+            {{ i['due_date'] }}
+            {% if overdue %}<span class="badge badge-overdue" style="margin-left:.4rem">OVERDUE</span>{% endif %}
+          </td>
+          <td><span class="badge badge-open">open</span></td>
+          <td>
+            {# Renew button – POST only, CSRF protected #}
+            <form method="post"
+                  action="{{ url_for('student.renew', issue_id=i['issue_id']) }}">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-outline"
+                      title="Request renewal">Renew</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="alert alert-info">You have no items currently borrowed.</div>
+{% endif %}
+
+{% if pending_renewals %}
+<h3 class="mt-2">Pending Renewal Requests</h3>
+<div class="card">
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Item</th><th>Requested</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        {% for r in pending_renewals %}
+        <tr>
+          <td>{{ r['item_name'] }}</td>
+          <td>{{ r['request_date'] }}</td>
+          <td><span class="badge badge-pending">Pending</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Issue Slip #{{ issue.issue_id }}{% endblock %}
+{% block content %}
+
+{# Print button – hidden when printing #}
+<div class="no-print flex mb-2">
+  <button class="btn btn-print" onclick="window.print()">Print Slip</button>
+  <a href="{{ url_for('coordinator.dashboard') }}" class="btn btn-outline">Back to Dashboard</a>
+</div>
+
+{# The slip-page div is the only thing shown when printing #}
+<div class="slip-page">
+<div class="slip">
+  <div class="slip-header">
+    <h2>NFSU Lab &mdash; Item Issue Slip</h2>
+    <p>National Forensic Sciences University &bull; Sector 9, Gandhinagar</p>
+  </div>
+
+  <table class="slip-table" style="width:100%">
+    <tr>
+      <td>Slip No.</td>
+      <td><strong>#{{ issue.issue_id }}</strong></td>
+    </tr>
+    <tr>
+      <td>Student Name</td>
+      <td>{{ student.name }}</td>
+    </tr>
+    <tr>
+      <td>Enrolment No.</td>
+      <td>{{ student.enrolment_no }}</td>
+    </tr>
+    <tr>
+      <td>Programme / Sem</td>
+      <td>{{ student.programme }}, Semester {{ student.semester }}</td>
+    </tr>
+    <tr>
+      <td>Item</td>
+      <td>{{ issue.item_name }} [{{ issue.item_code }}]</td>
+    </tr>
+    {% if issue.serial_no %}
+    <tr>
+      <td>Serial No.</td>
+      <td><code>{{ issue.serial_no }}</code></td>
+    </tr>
+    {% else %}
+    <tr>
+      <td>Quantity Issued</td>
+      <td>{{ issue.qty }}</td>
+    </tr>
+    {% endif %}
+    <tr>
+      <td>Purpose</td>
+      <td>{{ issue.purpose }}</td>
+    </tr>
+    <tr>
+      <td>Issue Date</td>
+      <td>{{ issue.issue_date }}</td>
+    </tr>
+    <tr>
+      <td>Due Date</td>
+      <td class="slip-due">{{ issue.due_date }}</td>
+    </tr>
+    <tr>
+      <td>Issued By</td>
+      <td>{{ issue.issued_by }}</td>
+    </tr>
+  </table>
+
+  <div class="slip-footer">
+    <div>
+      <div>Student Signature</div>
+      <div class="sign-line"></div>
+    </div>
+    <div>
+      <div>Coordinator Signature</div>
+      <div class="sign-line"></div>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}

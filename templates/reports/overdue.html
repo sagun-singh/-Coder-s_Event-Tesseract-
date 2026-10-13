@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Overdue Issues{% endblock %}
+{% block content %}
+
+<div class="flex mb-2" style="justify-content:space-between">
+  <h2>Overdue Issues &mdash; {{ today }}</h2>
+  <a href="{{ url_for('reports.export_csv', kind='overdue') }}" class="btn btn-sm btn-outline">
+    Export CSV
+  </a>
+</div>
+
+<div class="card">
+  {% if rows %}
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Student</th>
+          <th>Item / Serial</th>
+          <th>Due Date</th>
+          <th>Days Overdue</th>
+          <th>Outstanding</th>
+          <th>Summary</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr class="row-overdue">
+          <td>{{ r.issue_id }}</td>
+          <td>
+            {{ r.student_name }}<br>
+            <small class="text-muted">{{ r.enrolment_no }}</small>
+          </td>
+          <td>
+            {{ r.item_name }}
+            {% if r.serial_no %}<br><code>{{ r.serial_no }}</code>{% endif %}
+          </td>
+          <td>{{ r.due_date }}</td>
+          <td>
+            <span class="text-danger" style="font-weight:700">
+              {{ r.days_overdue }} {{ "day" if r.days_overdue == 1 else "days" }}
+            </span>
+          </td>
+          <td>{{ r.outstanding }}</td>
+          <td style="font-size:.82rem;color:#555;max-width:300px">{{ r.sentence }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="no-items">No overdue issues. All clear!</p>
+  {% endif %}
+</div>
+{% endblock %}

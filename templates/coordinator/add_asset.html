@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Add Asset{% endblock %}
+{% block content %}
+<h2>Add Asset (Serial Unit)</h2>
+
+<div class="card form-card">
+  <form method="post" action="{{ url_for('coordinator.add_asset_route') }}" novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="form-group">
+      <label>Parent Item <span class="req">*</span></label>
+      <select name="item_id" required>
+        <option value="">-- Select item (must be kind=asset) --</option>
+        {% for it in asset_items %}
+        <option value="{{ it['item_id'] }}">{{ it['name'] }} [{{ it['code'] }}]</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Serial Number <span class="req">*</span></label>
+      <input type="text" name="serial_no" maxlength="100" required placeholder="e.g. DB-011">
+    </div>
+
+    <div class="form-group">
+      <label>Location</label>
+      <select name="location_id">
+        <option value="">-- None --</option>
+        {% for loc in locations %}
+        <option value="{{ loc['location_id'] }}">{{ loc['name'] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Initial Condition</label>
+      <select name="condition">
+        <option value="usable" selected>Usable</option>
+        <option value="damaged">Damaged</option>
+        <option value="maintenance">Maintenance</option>
+      </select>
+    </div>
+
+    <div class="flex">
+      <button type="submit" class="btn btn-primary">Add Asset</button>
+      <a href="{{ url_for('coordinator.items') }}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

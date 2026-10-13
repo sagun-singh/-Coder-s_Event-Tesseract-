@@ -1,0 +1,78 @@
+{#
+  report_table.html
+  -----------------
+  Reusable Jinja2 macro for rendering a sortable/filterable report table.
+  Usage in any report template:
+
+    {% from "report_table.html" import report_table %}
+    {{ report_table(rows, columns) }}
+
+  Parameters
+  ----------
+  rows    : list of dicts (from logic_reports.py functions)
+  columns : list of dicts, each with keys:
+              key   (str)  – the dict key in each row
+              label (str)  – column header text
+              badge (bool, optional) – wrap value in a badge if truthy
+              overdue_key (str, optional) – if provided, rows where
+                row[overdue_key] > 0 get class row-overdue
+  empty_msg (str, optional) – message shown when rows is empty
+
+  Example
+  -------
+  {% from "report_table.html" import report_table %}
+  {{ report_table(
+       rows,
+       [
+         {"key": "student_name", "label": "Student"},
+         {"key": "enrolment_no", "label": "Enrolment No"},
+         {"key": "open_issues",  "label": "Open"},
+         {"key": "overdue_issues", "label": "Overdue", "badge": true},
+       ],
+       empty_msg="No data found."
+     )
+  }}
+#}
+
+{% macro report_table(rows, columns, empty_msg="No data found.") %}
+<div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr>
+        {% for col in columns %}
+        <th>{{ col.label }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% if rows %}
+        {% for r in rows %}
+        {# Determine row class: mark overdue rows #}
+        {% set is_overdue = namespace(val=false) %}
+        {% for col in columns %}
+          {% if col.get('overdue_key') and r.get(col.overdue_key, 0) > 0 %}
+            {% set is_overdue.val = true %}
+          {% endif %}
+        {% endfor %}
+        <tr {% if is_overdue.val %}class="row-overdue"{% endif %}>
+          {% for col in columns %}
+          <td>
+            {% set val = r[col.key] if col.key in r else '' %}
+            {% if col.get('badge') and val %}
+              <span class="badge badge-overdue">{{ val }}</span>
+            {% else %}
+              {{ val if val is not none else '—' }}
+            {% endif %}
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="{{ columns|length }}" class="no-items">{{ empty_msg }}</td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endmacro %}

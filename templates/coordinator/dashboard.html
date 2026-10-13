@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<div class="flex mb-2" style="justify-content:space-between;align-items:flex-start">
+  <h2>Coordinator Dashboard</h2>
+  <span class="text-muted" style="font-size:.85rem">Today: <strong>{{ today }}</strong></span>
+</div>
+
+{# ── 7 stock numbers ──────────────────────────────────────────────────── #}
+{% if stock %}
+<div class="stock-grid">
+  <div class="stock-tile tile-total">
+    <div class="num">{{ stock.total_qty }}</div>
+    <div class="lbl">Total Items</div>
+  </div>
+  <div class="stock-tile tile-assets">
+    <div class="num">{{ stock.total_assets }}</div>
+    <div class="lbl">Asset Units</div>
+  </div>
+  <div class="stock-tile tile-available">
+    <div class="num">{{ stock.qty_available }}</div>
+    <div class="lbl">Available</div>
+  </div>
+  <div class="stock-tile tile-open">
+    <div class="num">{{ stock.open_issues }}</div>
+    <div class="lbl">On Loan</div>
+  </div>
+  <div class="stock-tile tile-damaged">
+    <div class="num">{{ stock.qty_damaged }}</div>
+    <div class="lbl">Damaged</div>
+  </div>
+  <div class="stock-tile tile-lost">
+    <div class="num">{{ stock.qty_lost }}</div>
+    <div class="lbl">Lost</div>
+  </div>
+  <div class="stock-tile tile-maintenance">
+    <div class="num">{{ stock.qty_maintenance }}</div>
+    <div class="lbl">Maintenance</div>
+  </div>
+</div>
+{% endif %}
+
+{# ── Pending renewals ─────────────────────────────────────────────────── #}
+{% if pending_renewals %}
+<div class="card">
+  <div class="card-header">Pending Renewal Requests ({{ pending_renewals|length }})</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Student</th><th>Item</th><th>Current Due</th><th>Requested</th><th>Remarks</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        {% for r in pending_renewals %}
+        <tr>
+          <td>{{ r['student_name'] }}<br><small class="text-muted">{{ r['enrolment_no'] }}</small></td>
+          <td>{{ r['item_name'] }}</td>
+          <td>{{ r['due_date'] }}</td>
+          <td>{{ r['request_date'] }}</td>
+          <td>
+            {# Approve #}
+            <form method="post" action="{{ url_for('coordinator.decide_renewal_route', renewal_id=r['renewal_id']) }}" style="display:inline">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <input type="hidden" name="decision" value="approve">
+              <input type="text" name="remarks" placeholder="Remarks (required)" maxlength="500"
+                     style="width:140px;padding:.2rem .4rem;font-size:.8rem;border:1px solid #ced4da;border-radius:3px" required>
+              <button class="btn btn-sm btn-success mt-1">Approve</button>
+            </form>
+          </td>
+          <td>
+            {# Reject #}
+            <form method="post" action="{{ url_for('coordinator.decide_renewal_route', renewal_id=r['renewal_id']) }}" style="display:inline">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <input type="hidden" name="decision" value="reject">
+              <input type="text" name="remarks" placeholder="Remarks (required)" maxlength="500"
+                     style="width:140px;padding:.2rem .4rem;font-size:.8rem;border:1px solid #ced4da;border-radius:3px" required>
+              <button class="btn btn-sm btn-danger mt-1">Reject</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{# ── Overdue ──────────────────────────────────────────────────────────── #}
+{% if overdue %}
+<div class="card">
+  <div class="card-header" style="color:#c92a2a">Overdue ({{ overdue|length }})</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Student</th><th>Item</th><th>Due</th><th>Outstanding</th></tr></thead>
+      <tbody>
+        {% for r in overdue %}
+        <tr class="row-overdue">
+          <td>{{ r['student_name'] }}</td>
+          <td>{{ r['item_name'] }}</td>
+          <td>{{ r['due_date'] }}</td>
+          <td>{{ r['qty'] - r['qty_returned'] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{# ── Upcoming ─────────────────────────────────────────────────────────── #}
+{% if upcoming %}
+<div class="card">
+  <div class="card-header" style="color:#e67700">Due within 3 days ({{ upcoming|length }})</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Student</th><th>Item</th><th>Due</th><th>Outstanding</th></tr></thead>
+      <tbody>
+        {% for r in upcoming %}
+        <tr class="row-upcoming">
+          <td>{{ r['student_name'] }}</td>
+          <td>{{ r['item_name'] }}</td>
+          <td>{{ r['due_date'] }}</td>
+          <td>{{ r['qty'] - r['qty_returned'] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{% if not pending_renewals and not overdue and not upcoming %}
+<div class="alert alert-success">All clear &mdash; no overdue issues, no pending renewals.</div>
+{% endif %}
+
+<div class="flex mt-2">
+  <a href="{{ url_for('coordinator.issue') }}" class="btn btn-primary">Issue Item</a>
+  <a href="{{ url_for('coordinator.record_return') }}" class="btn btn-secondary">Record Return</a>
+  <a href="{{ url_for('coordinator.add_student') }}" class="btn btn-outline">Add Student</a>
+  <a href="{{ url_for('reports.stock') }}" class="btn btn-outline">Stock Summary</a>
+</div>
+{% endblock %}

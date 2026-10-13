@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Add Location{% endblock %}
+{% block content %}
+<h2>Add Location</h2>
+
+<div class="card form-card">
+  <form method="post" action="{{ url_for('coordinator.add_location_route') }}" novalidate>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="form-group">
+      <label>Location Name <span class="req">*</span></label>
+      <input type="text" name="name" maxlength="200" required
+             placeholder="e.g. Lab 2, Storage Cabinet B" autofocus>
+    </div>
+
+    <div class="flex">
+      <button type="submit" class="btn btn-primary">Add Location</button>
+      <a href="{{ url_for('coordinator.dashboard') }}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

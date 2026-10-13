@@ -1,0 +1,27 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment / secrets – NEVER commit these
+.env
+
+# Database – contains hashed passwords and real data; NEVER commit
+inventory.db
+*.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db

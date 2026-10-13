@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<h2>My Profile</h2>
+<div class="card form-card">
+  <table>
+    <tr><th>Name</th><td>{{ student['name'] }}</td></tr>
+    <tr><th>Enrolment No</th><td>{{ student['enrolment_no'] }}</td></tr>
+    <tr><th>Programme</th><td>{{ student['programme'] }}</td></tr>
+    <tr><th>Semester</th><td>{{ student['semester'] }}</td></tr>
+    <tr><th>Contact</th><td>{{ student['contact'] }}</td></tr>
+  </table>
+</div>
+{% endblock %}

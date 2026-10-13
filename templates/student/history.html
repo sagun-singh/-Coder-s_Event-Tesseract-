@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Issue History{% endblock %}
+
+{% block content %}
+<h2>My Issue History</h2>
+<div class="card">
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Item</th><th>Kind</th><th>Issued</th>
+          <th>Due</th><th>Returned</th><th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in issues %}
+        <tr>
+          <td>
+            <a href="{{ url_for('student.issue_detail', issue_id=i['issue_id']) }}">
+              #{{ i['issue_id'] }}
+            </a>
+          </td>
+          <td>{{ i['item_name'] }}</td>
+          <td>{{ i['kind'] }}</td>
+          <td>{{ i['issue_date'] }}</td>
+          <td>{{ i['due_date'] }}</td>
+          <td>{{ i['qty_returned'] }} / {{ i['qty'] }}</td>
+          <td>
+            <span class="badge {% if i['status'] == 'open' %}badge-open{% else %}badge-closed{% endif %}">
+              {{ i['status'] }}
+            </span>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="no-items">No issues found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

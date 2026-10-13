@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Report by Lab{% endblock %}
+{% block content %}
+<h2>Issues by Lab / Location</h2>
+
+<div class="card">
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Lab / Location</th>
+          <th>Items</th>
+          <th>Total Issues</th>
+          <th>Open</th>
+          <th>Overdue</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr {% if r.overdue_issues > 0 %}class="row-overdue"{% endif %}>
+          <td>{{ r.lab_name }}</td>
+          <td>{{ r.item_count }}</td>
+          <td>{{ r.total_issues }}</td>
+          <td>{{ r.open_issues }}</td>
+          <td>
+            {% if r.overdue_issues > 0 %}
+            <span class="badge badge-overdue">{{ r.overdue_issues }}</span>
+            {% else %}
+            0
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="no-items">No data.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
